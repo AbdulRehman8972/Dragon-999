@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon 999 Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, #1e1e2f, #121212);
+            color: #fff;
+            text-align: center;
+            padding-bottom: 30px;
+            overflow-x: hidden;
+        }
+
+        header h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 32px;
+            text-shadow: 0 0 8px #f39c12;
+            animation: pulse 2s infinite alternate;
+            margin: 20px 0;
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 8px #f39c12, 0 0 12px #f1c40f; }
+            100% { text-shadow: 0 0 12px #e74c3c, 0 0 20px #f39c12; }
+        }
+
+        /* Gold Counter */
+        .gold-counter {
+            background: #2c3e50;
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            margin: 10px 0;
+            color: #f1c40f;
+        }
+
+        /* Shop Section */
+        .shop-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .item {
+            background: #2c3e50;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .item h3 {
+            margin: 15px 0 5px;
+            font-size: 18px;
+            color: #f8c291;
+        }
+
+        .price {
+            font-size: 16px;
+            color: #f1c40f;
+            margin-bottom: 10px;
+        }
+
+        .item button {
+            background: linear-gradient(90deg, #f39c12, #f1c40f);
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .item button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Dragon 999 Shop</h1>
+    </header>
+
+    <!-- Gold Counter -->
+    <div class="gold-counter">
+        <p>Gold: <span id="gold-count">100</span></p>
+    </div>
+
+    <!-- Shop Items -->
+    <div class="shop-container">
+        <div class="item" data-price="20">
+            <h3>Iron Chestplate</h3>
+            <h3 class="price">20 Gold</h3>
+            <img src="https://static3.bigstockphoto.com/4/5/2/large1500/254829445.jpg" alt="Iron Chestplate">
+            <button onclick="buyItem(this)">Buy</button>
+        </div>
+
+        <div class="item" data-price="20">
+            <h3>Iron Leggings and Boots</h3>
+            <h3 class="price">20 Gold</h3>
+            <img src="https://play.idlescape.com/images/combat/equipment/iron_platelegs.png" alt="Iron Leggings">
+            <button onclick="buyItem(this)">Buy</button>
+        </div>
+
+        <div class="item" data-price="20">
+            <h3>Iron Helmet</h3>
+            <h3 class="price">20 Gold</h3>
+            <img src="https://www.shutterstock.com/image-vector/knight-helmet-sketch-hand-drawn-260nw-2228272047.jpg" alt="Iron Helmet">
+            <button onclick="buyItem(this)">Buy</button>
+        </div>
+
+        <div class="item" data-price="40">
+            <h3>Iron Sword and Shield</h3>
+            <h3 class="price">40 Gold</h3>
+            <img src="https://www.shutterstock.com/image-photo/holy-sword-shield-ink-pen-260nw-2541606113.jpg" alt="Iron Sword and Shield">
+            <button onclick="buyItem(this)">Buy</button>
+        </div>
+    </div>
+
+    <script>
+        let gold = 100;
+        let itemsBought = 0;
+        const totalItems = document.querySelectorAll('.item').length;
+
+        function buyItem(button) {
+            const item = button.parentElement;
+            const price = parseInt(item.dataset.price);
+
+            if (gold >= price) {
+                gold -= price;
+                document.getElementById('gold-count').innerText = gold;
+                button.disabled = true;
+                button.innerText = "Bought";
+                itemsBought++;
+
+                checkAllItemsBought();
+            } else {
+                alert("Not enough gold to buy this item!");
+            }
+        }
+
+        function checkAllItemsBought() {
+            if (itemsBought === totalItems) {
+                alert("Congratulations! You bought all items.");
+                const goToSecret = confirm("Do you want to go to the secret page?");
+                if (goToSecret) {
+                    window.location.href = "secret.html";
+                } else {
+                    window.location.href = "final.html";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

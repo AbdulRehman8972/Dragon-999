@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fight the Dragon</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #1e1e2f, #121212);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-top: 20px;
+            text-shadow: 0 0 10px red, 0 0 15px yellow;
+        }
+
+        #game-container {
+            margin-top: 50px;
+        }
+
+        /* Health Bars */
+        .health-bar {
+            font-size: 24px;
+            margin: 20px;
+            padding: 10px;
+            display: inline-block;
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+        }
+
+        #player-health {
+            color: red;
+        }
+
+        #dragon-health {
+            color: green;
+        }
+
+        /* Game Actions */
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            background-color: #e63946;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 10px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 10px rgba(255, 77, 77, 0.6);
+        }
+
+        button:hover {
+            background-color: #e63939;
+            transform: scale(1.05);
+        }
+
+        /* Game Status */
+        #game-status {
+            font-size: 18px;
+            margin: 20px;
+            color: yellow;
+        }
+
+        /* Game Over & Victory */
+        #game-over, #victory {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 50px;
+            font-size: 36px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        #game-over {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: red;
+        }
+
+        #victory {
+            background-color: rgba(0, 255, 0, 0.8);
+            color: green;
+        }
+
+        #game-over button, #victory button {
+            font-size: 20px;
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        /* Health Bar Updates */
+        #dragon-health-bar, #player-health-bar {
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        .health-status {
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+      /* Flexbox for images */
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-container img {
+    width: 20%; /* Reduced the width */
+    margin: 0 10px;
+    border-radius: 15px;
+}
+
+    </style>
+</head>
+<body>
+    <h1>⚔️ Fight the Dragon ⚔️</h1>
+    
+    <div class="image-container">
+        <img src="https://easydrawingguides.com/wp-content/uploads/2022/01/realistic-dragon-step-by-step-drawing-tutorial-step-10.png" alt="Dragon Image">
+        <img src="https://how-to-drawa.com/wp-content/uploads/2021/02/26-02-2021-21-06-12.png" alt="Warrior Image">
+    </div>
+
+    <div id="game-container">
+        <div class="health-bar">
+            Player Health: <span id="player-health" class="health-status">1000</span>
+            <div id="player-health-bar"></div>
+        </div>
+        <div class="health-bar">
+            Dragon Health: <span id="dragon-health" class="health-status">100000</span>
+            <div id="dragon-health-bar"></div>
+        </div>
+
+        <p id="game-status">Dodge the dragon's attack by clicking the dodge button and attack the dragon to deal damage!</p>
+
+        <button id="dodge-button">Dodge!</button>
+        <button id="attack-button">Attack the Dragon!</button>
+    </div>
+
+    <div id="game-over">
+        <p>Game Over! You failed to dodge the dragon's attack or the dragon defeated you!</p>
+        <button onclick="restartGame()">Restart</button>
+    </div>
+
+    <div id="victory">
+        <p>Victory! You defeated the dragon!</p>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+
+    <script>
+        let playerHealth = 100;
+        let dragonHealth = 10000;
+        let dodgeSuccessful = false;
+
+        const healthDisplay = document.getElementById("player-health");
+        const dragonHealthDisplay = document.getElementById("dragon-health");
+        const playerHealthBar = document.getElementById("player-health-bar");
+        const dragonHealthBar = document.getElementById("dragon-health-bar");
+        const gameStatus = document.getElementById("game-status");
+        const dodgeButton = document.getElementById("dodge-button");
+        const attackButton = document.getElementById("attack-button");
+        const gameOverScreen = document.getElementById("game-over");
+        const victoryScreen = document.getElementById("victory");
+
+        dodgeButton.addEventListener("click", () => {
+            dodgeSuccessful = true;
+            gameStatus.textContent = "You dodged the attack!";
+            dodgeButton.disabled = true;
+        });
+
+        attackButton.addEventListener("click", () => {
+            dragonHealth -= 3000;
+            dragonHealthDisplay.textContent = dragonHealth;
+            dragonHealthBar.style.width = dragonHealth + "%";
+            if (dragonHealth <= 0) {
+                gameStatus.textContent = "You defeated the dragon!";
+                setTimeout(endGame, 1000);
+            } else {
+                gameStatus.textContent = "You attacked the dragon! -100 Health!";
+            }
+        });
+
+        function startAttackCycle() {
+            setInterval(() => {
+                gameStatus.textContent = "Warning: Prepare to Dodge!";
+                setTimeout(() => {
+                    if (!dodgeSuccessful) {
+                        playerHealth -= 10;
+                        healthDisplay.textContent = playerHealth;
+                        playerHealthBar.style.width = playerHealth + "%";
+                        if (playerHealth <= 0) {
+                            endGame();
+                        } else {
+                            gameStatus.textContent = "You missed the dodge! -10 Health!";
+                        }
+                    } else {
+                        gameStatus.textContent = "Prepare for the next attack!";
+                    }
+
+                    dodgeSuccessful = false;
+                    dodgeButton.disabled = false;
+                }, 1000);
+            }, 5000);
+        }
+
+        function endGame() {
+            if (dragonHealth <= 0) {
+                victoryScreen.style.display = "block";
+            } else {
+                gameOverScreen.style.display = "block";
+            }
+        }
+
+        function restartGame() {
+            playerHealth = 100;
+            dragonHealth = 10000;
+            healthDisplay.textContent = playerHealth;
+            dragonHealthDisplay.textContent = dragonHealth;
+            playerHealthBar.style.width = playerHealth + "%";
+            dragonHealthBar.style.width = dragonHealth + "%";
+            gameStatus.textContent = "Dodge the dragon's attack by clicking the dodge button and attack the dragon to deal damage!";
+            dodgeSuccessful = false;
+            gameOverScreen.style.display = "none";
+            victoryScreen.style.display = "none";
+        }
+
+        startAttackCycle();
+    </script>
+</body>
+</html>
